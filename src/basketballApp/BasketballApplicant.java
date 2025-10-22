@@ -1,5 +1,10 @@
 package basketballApp;
-
+/**
+ * <p>Title: BinaryTree class</p>
+ * <p>Description: This is a generic binary tree class that contains nodes that have an integer key and a generic piece of data</p>
+ * @author Gaetano Re 
+ * N#: N00918949
+ */
 import java.time.*;
 
 public class BasketballApplicant {

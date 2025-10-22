@@ -3,7 +3,8 @@ package basketballApp;
 /**
  * <p>Title: BinaryTree class</p>
  * <p>Description: This is a generic binary tree class that contains nodes that have an integer key and a generic piece of data</p>
- * @author Gaetano Re
+ * @author Gaetano Re 
+ * N#: N00918949
  */
 public class BinarySearchTree<E> {
 	/**
@@ -11,7 +12,7 @@ public class BinarySearchTree<E> {
 	 * <p>Description: A private class that is utilized by the binary tree class above</p>
 	 * @author Gaetano Re
 	 */
-	private class Node<E>{
+	class Node<E>{
 		// This is the data that will dictate its place in a tree
 		int key;
 		
@@ -280,6 +281,10 @@ public class BinarySearchTree<E> {
 		}
 		
 		return true; // Return true if the action was completed successfully
+	}
+	
+	public boolean isEmpty() {
+		return root == null;
 	}
 	
 	/**
