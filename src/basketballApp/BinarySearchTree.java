@@ -1,7 +1,7 @@
 package basketballApp;
 
 /**
- * <p>Title: BinaryTree class</p>
+ * <p>Title: BinarySearchTree class</p>
  * <p>Description: This is a generic binary tree class that contains nodes that have an integer key and a generic piece of data</p>
  * @author Gaetano Re 
  * N#: N00918949
@@ -15,7 +15,8 @@ public class BinarySearchTree<E> {
 	class Node<E>{
 		// This is the data that will dictate its place in a tree
 		int key;
-		
+		int heightLeft;
+		int heightRight;
 		// This is the actual data
 		E data;
 		
@@ -23,20 +24,36 @@ public class BinarySearchTree<E> {
 		Node<E> leftChild;
 		Node<E> rightChild;
 		
-		
+		/**
+		 * <p>Node default constructor</p>
+		 * <p>Description: the default constructor for the node class.</p>
+		 * @param key
+		 * @param data
+		 */
 		Node(int key, E data){
 			this.key = key;
 			this.data = data;
+			this.heightLeft = 0;
+			this.heightRight = 0;
 		}
 		
 		
 		public String toString() {
 			return data.toString();
 		}
+		
+		public int getBalanceFactor() {
+			return heightRight - heightLeft;
+		}
+		
+		public boolean hasNoChildren() {
+			return leftChild == null && rightChild == null;
+		}
+		
 	}
 	
 	// Root of the tree
-	Node<E> root;
+	private Node<E> root;
 	
 	/**
 	 * <p> insert method</p>
@@ -56,47 +73,48 @@ public class BinarySearchTree<E> {
 		
 		// else, we start the process
 		else {
-			
+			int numTransversals = 0;
 			// the focus node is the node we use to get the current node in the tree
 			Node<E> focusNode = root;
 			
 			// this will contain the parent of the focus node
 			Node<E> parent;
-			
-			
+			boolean done = false;
 			// This is the loop that will loop through the tree.
-			while(true) {
+			while(!done) {
 				// set the parent to the current focus
 				parent = focusNode;
 				
 				// If the key is less than the focus, the focus will be on the left
 				if(key < focusNode.key) {
 					focusNode = focusNode.leftChild;
-					 // Add to the load balance value of the left
-					
+					++numTransversals;
 					// If the focus is null, the parent's left child is the new node
 					if(focusNode == null) {
 						parent.leftChild = newNode;
-						return;
+						done = true;
 					}
 				}
 				
 				// If the key is more than the focus, the focus will be on the right
-				else if(key > focusNode.key) {
+				else if(key >= focusNode.key) {
 					focusNode = focusNode.rightChild;
 					 // Add to the load balance value of the right
-					
+					++numTransversals;
 					// If the focus on this time is null, the right child of the parent will be the new node.
 					if(focusNode == null) {
 						parent.rightChild = newNode;
-						return;
+						done = true;
 					}
 				}
-				else if(key == focusNode.key) {
+				
+				// This used to be the case till I realized that two keys can be the same with the data
+				// I am given, so just not inserting it into the tree will not work for me.
+				/*else if(key == focusNode.key) {
 					if(focusNode != null) {
 						return;
 					}
-				}
+				}*/
 				
 			}
 		}
@@ -203,16 +221,18 @@ public class BinarySearchTree<E> {
 			}
 		}
 		
-		if(focusNode.leftChild == null && focusNode.rightChild == null) { // If the focus does not have any children
+		if(focusNode.hasNoChildren()) { // If the focus does not have any children
 			if(focusNode == root) { // If the focus is the node, that means the tree only has a root
 				root = null; // The root is now removed
 			}
 			else if(isItALeft) { // If the focus is a left child
 				parent.leftChild = null; // Remove the left child
+				parent.heightLeft--;
 				
 			}
 			else {
 				parent.rightChild = null; // Remove the right child
+				parent.heightRight--;
 				
 			}
 		}
@@ -282,9 +302,22 @@ public class BinarySearchTree<E> {
 		
 		return true; // Return true if the action was completed successfully
 	}
-	
+	/**
+	 * <p>isEmpty method</p>
+	 * <p>Description: notifies the user with a boolean whether or not the tree is empty</p>
+	 * @return true if the tree is empty, false if it is not
+	 */
 	public boolean isEmpty() {
-		return root == null;
+		return root == null; 
+	}
+	
+	/**
+	 * <p>getRoot accessor method</p>
+	 * <p>Description receives the root of the tree</p>
+	 * @return the root of the tree.
+	 */
+	public Node<E> getRoot(){
+		return root;
 	}
 	
 	/**
@@ -313,6 +346,16 @@ public class BinarySearchTree<E> {
 		
 		return replacement; // return the replacement node
 	}
+	
+	private Node<E> rotateLeft(Node<E> x, Node<E> y, Node<E> z){
+		return null;
+	}
+	
+	private Node<E> rotateRight(Node<E> x, Node<E> y,Node<E> z){
+		return null;
+	}
+	
+	
 	
 	
 }

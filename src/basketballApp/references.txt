@@ -1,0 +1,10 @@
+These are the following references I have referenced for the making of this project:
+
+
+I did not have a binary search tree data structureon hand so I followed this video 
+to get started and I edited and tightened up the code for use in this project. 
+
+Derek Banas - Java Binary Search Tree 1 &2:
+https://www.youtube.com/watch?v=M6lYob8STMI
+https://www.youtube.com/watch?v=UcOxGmj45AA
+
