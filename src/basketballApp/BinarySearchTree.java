@@ -347,14 +347,53 @@ public class BinarySearchTree<E> {
 		return replacement; // return the replacement node
 	}
 	
-	private Node<E> rotateLeft(Node<E> x, Node<E> y, Node<E> z){
-		return null;
+	private Node<E> rotateLeft(Node<E> z){
+		
+		// The nodes x, y and z are set up
+		Node<E> y = z.rightChild;
+		Node<E> x = y.rightChild;
+		
+		
+		// All subtrees are properly stored into variables
+		Node<E> t1 = z.leftChild;
+		Node<E> t2 = y.leftChild;
+		Node<E> t3 = x.leftChild;
+		Node<E> t4 = x.rightChild;
+		
+		// The nodes are then rotated
+		y.leftChild = z;
+		y.rightChild = x;
+		z.leftChild = t1;
+		z.rightChild = t2;
+		x.leftChild = t3;
+		x.rightChild = t4;
+		
+		// return the new tree resulting from the rotation.
+		return y;
 	}
 	
-	private Node<E> rotateRight(Node<E> x, Node<E> y,Node<E> z){
-		return null;
+	private Node<E> rotateRight(Node<E> z){
+		// Identify the y and z nodes
+		Node<E> y = z.leftChild;
+		Node<E> x = y.leftChild;
+		
+		// Identify the subtrees that will be reassigned
+		Node<E> t1 = x.leftChild;
+		Node<E> t2 = x.rightChild;
+		Node<E> t3 = y.rightChild;
+		Node<E> t4 = z.rightChild;
+		
+		// Rotate the subtree and place the other subtrees in the appropriate areas.
+		y.rightChild = z;
+		y.leftChild = x;
+		x.leftChild = t1;
+		x.rightChild = t2;
+		z.leftChild = t3;
+		z.rightChild = t4;
+		
+		// return the new tree that results from the rotation.
+		return y;
 	}
-	
 	
 	
 	
