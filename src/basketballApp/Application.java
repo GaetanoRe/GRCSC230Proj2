@@ -18,16 +18,16 @@ public class Application {
 	
 	public static void main(String args[]) {
 		@SuppressWarnings("unchecked")
-		BinarySearchTree<BasketballApplicant>[] eligableApps = new BinarySearchTree[6];
-		BinarySearchTree<BasketballApplicant> readyToBeAdded = new BinarySearchTree<BasketballApplicant>();
-		BinarySearchTree<BasketballApplicant> inelligableApps = new BinarySearchTree<BasketballApplicant>();
+		AVLTree<BasketballApplicant>[] eligableApps = new AVLTree[6];
+		AVLTree<BasketballApplicant> readyToBeAdded = new AVLTree<BasketballApplicant>();
+		AVLTree<BasketballApplicant> inelligableApps = new AVLTree<BasketballApplicant>();
 		int numEligable = 0;
 		int teamNum = 0;
 		boolean done = false;
 		try {
 			File applicantFile = new File("applicants.txt");
 			Scanner scnr = new Scanner(applicantFile);
-			eligableApps[teamNum] = new BinarySearchTree<BasketballApplicant>();
+			eligableApps[teamNum] = new AVLTree<BasketballApplicant>();
 			while(scnr.hasNext()) {
 				BasketballApplicant currApp;
 				String currentLine = scnr.nextLine();
@@ -45,7 +45,7 @@ public class Application {
 				}
 				else if(numEligable == 9) {
 					teamNum++;
-					eligableApps[teamNum] = new BinarySearchTree<BasketballApplicant>();
+					eligableApps[teamNum] = new AVLTree<BasketballApplicant>();
 					numEligable = 0;
 				}
 				else{

@@ -1,403 +1,120 @@
 package basketballApp;
 
-/**
- * <p>Title: BinarySearchTree class</p>
- * <p>Description: This is a generic binary tree class that contains nodes that have an integer key and a generic piece of data</p>
- * @author Gaetano Re 
- * N#: N00918949
- */
-public class BinarySearchTree<E> {
-	/**
-	 * <p>Title: BinaryTree Node class</p>
-	 * <p>Description: A private class that is utilized by the binary tree class above</p>
-	 * @author Gaetano Re
-	 */
-	class Node<E>{
-		// This is the data that will dictate its place in a tree
-		int key;
-		int heightLeft;
-		int heightRight;
-		// This is the actual data
-		E data;
-		
-		// The two children of the Binary Tree Node
-		Node<E> leftChild;
-		Node<E> rightChild;
-		
-		/**
-		 * <p>Node default constructor</p>
-		 * <p>Description: the default constructor for the node class.</p>
-		 * @param key
-		 * @param data
-		 */
-		Node(int key, E data){
-			this.key = key;
-			this.data = data;
-			this.heightLeft = 0;
-			this.heightRight = 0;
-		}
-		
-		
-		public String toString() {
-			return data.toString();
-		}
-		
-		public int getBalanceFactor() {
-			return heightRight - heightLeft;
-		}
-		
-		public boolean hasNoChildren() {
-			return leftChild == null && rightChild == null;
-		}
-		
-	}
+public class BinarySearchTree<E extends Comparable<E>> implements Tree<E> {
 	
-	// Root of the tree
 	private Node<E> root;
-	
-	/**
-	 * <p> insert method</p>
-	 * <p> Inserts a node into the tree dependent on the key</p>
-	 * @param key value that dictates it's place in the tree
-	 * @param data that the node contains
-	 */
-	public void insert(int key, E data) {
-		
-		// Create a new node to insert
-		Node<E> newNode = new Node<E>(key, data);
-		
-		// If the root is empty, then insert the node into the root
-		if(root == null) {
-			root = newNode;
-		}
-		
-		// else, we start the process
-		else {
-			int numTransversals = 0;
-			// the focus node is the node we use to get the current node in the tree
-			Node<E> focusNode = root;
-			
-			// this will contain the parent of the focus node
-			Node<E> parent;
-			boolean done = false;
-			// This is the loop that will loop through the tree.
-			while(!done) {
-				// set the parent to the current focus
-				parent = focusNode;
-				
-				// If the key is less than the focus, the focus will be on the left
-				if(key < focusNode.key) {
-					focusNode = focusNode.leftChild;
-					++numTransversals;
-					// If the focus is null, the parent's left child is the new node
-					if(focusNode == null) {
-						parent.leftChild = newNode;
-						done = true;
-					}
-				}
-				
-				// If the key is more than the focus, the focus will be on the right
-				else if(key >= focusNode.key) {
-					focusNode = focusNode.rightChild;
-					 // Add to the load balance value of the right
-					++numTransversals;
-					// If the focus on this time is null, the right child of the parent will be the new node.
-					if(focusNode == null) {
-						parent.rightChild = newNode;
-						done = true;
-					}
-				}
-				
-				// This used to be the case till I realized that two keys can be the same with the data
-				// I am given, so just not inserting it into the tree will not work for me.
-				/*else if(key == focusNode.key) {
-					if(focusNode != null) {
-						return;
-					}
-				}*/
-				
-			}
-		}
+
+	@Override
+	public Tree<E> insert(E data) {
+		root = insert(data, root);
+		return this;
 	}
-	
-	/**
-	 * <p>inOrderTraverseTree method</p>
-	 * <p> A recursive method that will traverse the tree in order. It typically starts at the leftmost node, then explores the parent, 
-	 * then the right child</p>
-	 * @param focusNode during the recursion
-	 */
-	public void inOrderTraverseTree(Node<E> focusNode) {
-		if(focusNode != null) { // If the node is not null
-			inOrderTraverseTree(focusNode.leftChild); // Go to the left child
-			System.out.println(focusNode); // Display the contents
-			
-			inOrderTraverseTree(focusNode.rightChild); // Go to right child
-		}
+
+	@Override
+	public void delete(E data) {
+		root = delete(data, root);
 	}
-	
-	/**
-	 * <p> preOrderTraverseTree method</p>
-	 * <p> a recursive method that will traverse the tree in preorder. It typically displays the node it is currently focusing on, then visits the left child
-	 * then the right</p>
-	 * @param focusNode that the method is currently focusing on.
-	 */
-	public void preOrderTraverseTree(Node<E> focusNode) {
-		if(focusNode != null) {
-			System.out.println(focusNode); // Display
-			
-			preOrderTraverseTree(focusNode.leftChild); // Check Left Child
-			preOrderTraverseTree(focusNode.rightChild); // Check Right Child
-		}
+
+	@Override
+	public void traverse() {
+		traverseInOrder(root);
+
 	}
-	
-	/**
-	 * <p> postOrderTraverseTree method</p>
-	 * <p> a recursive method that will traverse the tree in post order. It typically traverses the left child, then the right child, then displays
-	 * it.</p>
-	 * @param focusNode
-	 */
-	public void postOrderTraverseTree(Node<E> focusNode) {
-		if(focusNode != null) {
-			preOrderTraverseTree(focusNode.leftChild); // Check Left Child
-			preOrderTraverseTree(focusNode.rightChild);// Check Right Child
-			
-			System.out.println(focusNode); // Display
+
+	@Override
+	public E getMax() {
+		if(isEmpty()) {
+			return null;
 		}
+		return getMax(root);
 	}
-	
-	/**
-	 * <p> findNode method</p>
-	 * <p> utilizes a given key to find the node associated with it.</p>
-	 * @param key to find the node
-	 * @return null if the node does not exist, or the node if it does.
-	 */
-	public Node<E> findNode(int key) {
-		Node<E> focusNode = root; // The focus starts at the root
-		
-		while(focusNode.key != key) { // While the focus Node's key does not equal the given key
-			if(key < focusNode.key) { // If the key is less than the focus'
-				focusNode = focusNode.leftChild; // the focus is now in the left child
-			}
-			
-			else if(key > focusNode.key) { // If the key is more than the focus'
-				focusNode = focusNode.rightChild; // The focus is now in the right child
-			}
-			
-			if(focusNode == null) { // If the focus is null, the search failed
-				return null;
-			}
+
+	@Override
+	public E getMin() {
+		if(isEmpty()) {
+			return null;
 		}
-		
-		return focusNode; // return the node that matches the key
+		return getMin(root);
 	}
-	
-	/**
-	 * <p> remove method</p>
-	 * <p> removes a node from the tree</p>
-	 * @param key of the node to remove
-	 * @return true if the node was found and deleted, false if no node of that key was found.
-	 */
-	public boolean remove(int key) {
-		Node<E> focusNode = root; // The node to focus on.
-		Node<E> parent = root; // The parent of the focus Node
-		
-		boolean isItALeft = true; // This will determine different operations based on whether or not the focus node has a left child or not
-		
-		while(focusNode.key != key) { // While the given key is not equal to the focus Node's key
-			parent = focusNode; // The parent node of the next focus is assigned.
-			
-			if(key < focusNode.key) { // If the key is greater than the current focus node's key
-				
-				isItALeft = true; // The focus Node has a left child
-				focusNode = focusNode.leftChild; // The focus is now on the left child
-			}
-			else {
-				isItALeft = false; // The focus Node does not have a left child
-				focusNode = focusNode.rightChild; // The focus Node is on the right child
-			}
-			
-			if(focusNode == null) { // If the focus Node is null, the node to be removed does not exist
-				return false;
-			}
-		}
-		
-		if(focusNode.hasNoChildren()) { // If the focus does not have any children
-			if(focusNode == root) { // If the focus is the node, that means the tree only has a root
-				root = null; // The root is now removed
-			}
-			else if(isItALeft) { // If the focus is a left child
-				parent.leftChild = null; // Remove the left child
-				parent.heightLeft--;
-				
-			}
-			else {
-				parent.rightChild = null; // Remove the right child
-				parent.heightRight--;
-				
-			}
-		}
-		
-		else if(focusNode.rightChild == null) { // If the focus has a left child, but no right child
-			if(focusNode == root) { // if the focus is the root
-				root = focusNode.leftChild; // The root becomes the left child
-				
-			}
-			else if(isItALeft) { // If the focus is a left child
-				parent.leftChild = focusNode.leftChild; // the focus' parent's left child is now the focus' left
-				
-				if(parent.key != root.key) {
-					
-				}
-			}
-			else {
-				parent.rightChild = focusNode.leftChild; // the focus' parent's right child is now the focus' right
-				
-				if(parent.key != root.key) {
-					
-				}
-			}
-		}
-		
-		else if(focusNode.leftChild == null) { // If the focus has a right child but no left child
-			if(focusNode == root) { // If the focus was the root
-				root = focusNode.rightChild; // The root is now the right child
-				if(parent.key != root.key) {
-					
-				}
-			}
-			else if(isItALeft) { // If the focus is the left child
-				parent.leftChild = focusNode.rightChild; // Make the parent's left child the focus' right
-				
-				if(parent.key != root.key) {
-					
-				}
-			}
-			else {
-				parent.rightChild = focusNode.rightChild; // Make the parent's right child the focus' right
-				
-				if(parent.key != root.key) {
-					
-				}
-			}
-		}
-		else { // If both children exist
-			Node<E> replacement = getReplacementNode(focusNode); // get the replacement node for the focus
-			
-			if(focusNode == root) { // If the focus is in the root
-				root = replacement; // the replacement node is now the root
-			}
-			
-			else if(isItALeft) { // If the focus is a left child
-				parent.leftChild = replacement; // The parent's left child is the replacement
-				
-			}
-			else { // If the focus is a right child
-				parent.rightChild = replacement; //The parent's right child is now the replacement.
-				
-			}
-			
-			replacement.leftChild = focusNode.leftChild; // Make the focus' left child into the replacement's
-			
-		}
-		
-		return true; // Return true if the action was completed successfully
-	}
-	/**
-	 * <p>isEmpty method</p>
-	 * <p>Description: notifies the user with a boolean whether or not the tree is empty</p>
-	 * @return true if the tree is empty, false if it is not
-	 */
+
+	@Override
 	public boolean isEmpty() {
-		return root == null; 
+		return this.root == null;
 	}
 	
-	/**
-	 * <p>getRoot accessor method</p>
-	 * <p>Description receives the root of the tree</p>
-	 * @return the root of the tree.
-	 */
-	public Node<E> getRoot(){
-		return root;
+	private void traverseInOrder(Node<E> node) {
+		if(node != null) {
+			traverseInOrder(node.getLeftChild());
+			System.out.println(node);
+			traverseInOrder(node.getRightChild());
+		}
 	}
 	
-	/**
-	 * <p> getReplacementNode method</p>
-	 * <p> This is a private recursive method that will return a replacement node upon node removal</p>
-	 * @param replacementNode
-	 * @return
-	 */
-	private Node<E> getReplacementNode(Node<E> replacementNode) {
-		Node<E> replacementParent = replacementNode; // The given node is the parent at first
-		Node<E> replacement = replacementNode; // The replacement is the the given node at first
+	
+	
+	private void traversePreOrder(Node<E> node) {
 		
-		Node<E> focusNode = replacementNode.rightChild; // The focus node starts at the right child of the given node
+	}
+	
+	private void traversePostOrder(Node<E> node) {
 		
-		while(focusNode != null) { // While the focus is not null
-			replacementParent = replacement; // The next node's parent is the current focus 
-			replacement = focusNode; // The focus is the replacement
+	}
+	
+	private E getMax(Node<E> node){
+		if(node.getRightChild() != null) {
+			return getMax(node.getRightChild());
+		}
+		else {
+			return node.getData();
+		}
+	}
+	
+	private E getMin(Node<E> node) {
+		if(node.getLeftChild() != null) {
+			return getMin(node.getLeftChild());
+		}
+		else {
+			return node.getData();
+		}
+	}
+	
+	private Node<E> insert(E data, Node<E> node) {
+		if(node == null) {
+			return new Node<E>(data);
+		}
+		else if(data.compareTo(node.getData()) < 0) {
+			node.setLeftChild(insert(data, node.getLeftChild()));
+		}
+		else if(data.compareTo(node.getData()) > 0) {
+			node.setRightChild(insert(data, node.getRightChild()));
+		}
+		
+		return node;
+	}
+	
+	private Node<E> delete(E data, Node<E> node){
+		if(node == null) {
+			return null;
+		}
+		if(data.compareTo(node.getData()) < 0) {
+			node.setLeftChild(delete(data, node.getLeftChild()));
+		}
+		else if(data.compareTo(node.getData()) > 0) {
+			node.setRightChild(delete(data, node.getRightChild()));
+		}else {
+			if(node.getLeftChild() == null) {
+				return node.getRightChild();
+			}
+			else if(node.getRightChild() == null) {
+				return node.getLeftChild();
+			}
+			node.setData(getMax(node.getLeftChild()));
+			node.setLeftChild(delete(node.getData(), node.getLeftChild()));
 			
-			focusNode = focusNode.leftChild; // The focus is now to it's left child
 		}
 		
-		if(replacement != replacementNode.rightChild) { // If the replacement is not the right child of the given node
-			replacementParent.leftChild = replacement.rightChild; // The parent's left child is the right child of the given node
-			replacement.rightChild = replacementNode.rightChild; // the replacement's right child is now the given's right child
-		}
-		
-		return replacement; // return the replacement node
+		return node;
 	}
 	
-	private Node<E> rotateLeft(Node<E> z){
-		
-		// The nodes x, y and z are set up
-		Node<E> y = z.rightChild;
-		Node<E> x = y.rightChild;
-		
-		
-		// All subtrees are properly stored into variables
-		Node<E> t1 = z.leftChild;
-		Node<E> t2 = y.leftChild;
-		Node<E> t3 = x.leftChild;
-		Node<E> t4 = x.rightChild;
-		
-		// The nodes are then rotated
-		y.leftChild = z;
-		y.rightChild = x;
-		z.leftChild = t1;
-		z.rightChild = t2;
-		x.leftChild = t3;
-		x.rightChild = t4;
-		
-		// return the new tree resulting from the rotation.
-		return y;
-	}
-	
-	private Node<E> rotateRight(Node<E> z){
-		// Identify the y and z nodes
-		Node<E> y = z.leftChild;
-		Node<E> x = y.leftChild;
-		
-		// Identify the subtrees that will be reassigned
-		Node<E> t1 = x.leftChild;
-		Node<E> t2 = x.rightChild;
-		Node<E> t3 = y.rightChild;
-		Node<E> t4 = z.rightChild;
-		
-		// Rotate the subtree and place the other subtrees in the appropriate areas.
-		y.rightChild = z;
-		y.leftChild = x;
-		x.leftChild = t1;
-		x.rightChild = t2;
-		z.leftChild = t3;
-		z.rightChild = t4;
-		
-		// return the new tree that results from the rotation.
-		return y;
-	}
-	
-	
-	
+
 }
-
-
-
