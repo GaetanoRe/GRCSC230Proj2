@@ -38,10 +38,10 @@ public class Application {
 						Integer.parseInt(appDate[0]), Integer.parseInt(appDate[1]), Integer.parseInt(appDate[2]));
 				int currAppAge = currApp.getAge();
 				if(currAppAge < 9 || currAppAge > 10) {
-					inelligableApps.insert(currApp.applicationToDueDate(), currApp);
+					inelligableApps = inelligableApps.insert(currApp);
 				}
 				else if(currAppAge == 10 || (teamNum == 5 && numEligable == 9)) {
-					readyToBeAdded.insert(currApp.applicationToDueDate(), currApp);
+					readyToBeAdded = readyToBeAdded.insert(currApp);
 				}
 				else if(numEligable == 9) {
 					teamNum++;
@@ -49,7 +49,7 @@ public class Application {
 					numEligable = 0;
 				}
 				else{
-					eligableApps[teamNum].insert(currApp.applicationToDueDate(), currApp);
+					eligableApps[teamNum] = eligableApps[teamNum].insert(currApp);
 					numEligable++;
 				}
 			}
@@ -59,14 +59,14 @@ public class Application {
 					done = true;
 				}
 				else {
-					int currKey = readyToBeAdded.getRoot().key;
+					AVLNode<BasketballApplicant> currPlayer = readyToBeAdded.getRoot();
 					if(numEligable == 9) {
 						teamNum++;
 						numEligable = 0;
 					}
-					eligableApps[teamNum].insert(currKey, readyToBeAdded.findNode(currKey).data);
+					eligableApps[teamNum].insert(currPlayer.getData());
 					numEligable++;
-					readyToBeAdded.remove(currKey);
+					readyToBeAdded.delete(currPlayer.getData());
 				}
 			}
 			
@@ -74,18 +74,18 @@ public class Application {
 			if(teamNum != 0) {
 				for(int i = 0; i < teamNum; i++) {
 					System.out.println("Team " + (i + 1));
-					eligableApps[i].inOrderTraverseTree(eligableApps[i].getRoot());
+					eligableApps[i].traverse();
 				}
 			}
 			else {
-				eligableApps[0].inOrderTraverseTree(eligableApps[0].getRoot());
+				eligableApps[0].traverse();
 			}
 			System.out.println();
 			System.out.println("Eligable Participants that will be added space is opened up");
-			readyToBeAdded.inOrderTraverseTree(readyToBeAdded.getRoot());
+			readyToBeAdded.traverse();
 			System.out.println();
 			System.out.println("Ineligable Participants:");
-			inelligableApps.inOrderTraverseTree(inelligableApps.getRoot());
+			inelligableApps.traverse();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

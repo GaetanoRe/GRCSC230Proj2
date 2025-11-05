@@ -1,11 +1,12 @@
 package basketballApp;
 
-public class Node<E extends Comparable<E>> {
+public class AVLNode<E extends Comparable<E>> {
 			// This will contain the data
 			private E data;
+			private int height;
 			// The two children of the Binary Tree Node
-			private Node<E> leftChild;
-			private Node<E> rightChild;
+			private AVLNode<E> leftChild;
+			private AVLNode<E> rightChild;
 			
 			/**
 			 * <p>Node default constructor</p>
@@ -13,8 +14,9 @@ public class Node<E extends Comparable<E>> {
 			 * @param key
 			 * @param data
 			 */
-			Node(E data){
+			AVLNode(E data){
 				this.data = data;
+				this.height = 1;
 			}
 			
 			public String toString() {
@@ -25,25 +27,35 @@ public class Node<E extends Comparable<E>> {
 				return data;
 			}
 			
-			public Node<E> getRightChild(){
+			public AVLNode<E> getRightChild(){
 				return rightChild;
 			}
 			
-			public Node<E> getLeftChild(){
+			public AVLNode<E> getLeftChild(){
 				return leftChild;
+			}
+			
+			public int getHeight() {
+				return height;
 			}
 			
 			public void setData(E data) {
 				this.data = data;
 			}
 			
-			public void setLeftChild(Node<E> node) {
+			public void setLeftChild(AVLNode<E> node) {
 				this.leftChild = node;
 			}
 			
-			public void setRightChild(Node<E> node) {
+			public void setRightChild(AVLNode<E> node) {
 				this.rightChild = node;
 			}
+			
+			public void setHeight(int newHeight) {
+				height = newHeight;
+			}
+			
+			
 			
 			public boolean hasNoChildren() {
 				return leftChild == null && rightChild == null;

@@ -7,7 +7,7 @@ package basketballApp;
  */
 import java.time.*;
 
-public class BasketballApplicant {
+public class BasketballApplicant implements Comparable<BasketballApplicant>{
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
@@ -57,7 +57,14 @@ public class BasketballApplicant {
 	public LocalDate getApplicationDate() {
 		return this.applicationDate;
 	}
-	public int compareTo(BasketballApplicant app) {
-		return this.applicationDate.compareTo(app.getApplicationDate());
+
+	@Override
+	public int compareTo(BasketballApplicant o) {
+		if(o.applicationToDueDate() == this.applicationToDueDate()) {
+			return (o.getFirstName().hashCode() + o.getLastName().hashCode()) +
+					(this.firstName.hashCode() + this.lastName.hashCode());
+		}
+		
+		return o.applicationToDueDate() - this.applicationToDueDate();
 	}
 }
