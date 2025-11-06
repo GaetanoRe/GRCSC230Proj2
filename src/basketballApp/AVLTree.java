@@ -11,83 +11,96 @@ public class AVLTree<E extends Comparable<E>> implements Tree<E>{
 	private AVLNode<E> root;
 
 	/**
-	 * insert method
-	 * Description: inserts the node at the root and initiates the recursive insert method
+	 * <p>insert method</p>
+	 * <p>Description: inserts the node at the root and initiates the recursive insert method</p>
 	 * @param the data to insert into the tree.
-	 * @return the resulting tree
 	 */
 	@Override
-	public AVLTree<E> insert(E data) {
-		root = insert(data, root);
-		return this;
+	public void insert(E data) {
+		root = insert(data, root); // Insert the data at the root 
 	}
 	
 	/**
-	 * delete method
-	 * Description: deletes a node with the given data using a recursive delete method
+	 * <p>delete method</p>
+	 * <p>Description: deletes a node with the given data using a recursive delete method</p>
 	 * @param the data to delete from the tree.
 	 */
 	@Override
 	public void delete(E data) {
-		root = remove(data, root);
+		root = remove(data, root); // Start the removing process at the root
 	}
 	
 	/**
-	 * traverse method
-	 * Description: displays the the data in the tree using InOrder Traversal
+	 * <p>traverse method<p>
+	 * <p>Description: displays the the data in the tree using InOrder Traversal</p>
 	 */
 	@Override
 	public void traverse() {
-		traverseInOrder(root);
+		traverseInOrder(root); // Traverse the tree in order
 	}
+	
 	/**
-	 * getMax method
-	 * Description: Starts at the root of the node and finds the maximum node of the tree
+	 * <p>getMax method</p>
+	 * <p>Description: Starts at the root of the node and finds the maximum node of the tree</p>
 	 * @return the maximum value of the tree
 	 */
 	@Override
 	public E getMax() {
-		if(isEmpty()) {
-			return null;
+		if(isEmpty()) { // If the tree is empty
+			return null; // return null
 		}
-		return getMax(root);
+		return getMax(root); // Else, utilize the getMax helper method starting at the root
 	}
 
 	/**
-	 * getMin method
-	 * Description: Starts at the root of the node and finds the minimum node of the tree
+	 * <p>getMin method</p>
+	 * <p>Description: Starts at the root of the node and finds the minimum node of the tree</p>
 	 * @return the minimum node of the tree.
 	 */
 	@Override
 	public E getMin() {
-		if(isEmpty()) {
-			return null;
+		if(isEmpty()) { // If the tree is empty
+			return null; // Return null
 		}
-		return getMin(root);
+		return getMin(root); // Otherwise, utilize the getMin helper method starting at the root
 	}
 	
 	/**
-	 * isEmpty method
-	 * Description: returns a boolean dictating whether or not the tree is empty
+	 * <p>isEmpty method</p>
+	 * <p>Description: returns a boolean dictating whether or not the tree is empty by checking if the root is null</p>
+	 * @return true if the root is null, false if the root is not null
 	 */
 	@Override
 	public boolean isEmpty() {
-		return this.root == null;
+		return this.root == null; // If the root is null, then the tree is empty
 	}
 	
 	/**
-	 * This method retrieves the value 
+	 * <p>get method</p>
+	 * <p>Description: searches for the data supplied as the parameter. It returns null if the data was not found</p>
 	 * @param data
-	 * @return
+	 * @return the data if it exists in the tree
 	 */
 	public E get(E data) {
-		return get(data, root) != null ? get(data, root).getData() : null;
+		AVLNode<E> accessor = get(data, root); // Create a node containing the data if the data was found using the helper method
+		
+		return accessor != null ? accessor.getData() : null; // If the accessor node is not null, then return the data, 
+															 // else return null
 	}
 	
+	/**
+	 * <p>getRoot accessor method</p>
+	 * <p>Description: returns the root of the tree</p>
+	 * @return the root of the tree
+	 */
 	public AVLNode<E> getRoot() {
 		return root;
 	}
 	
+	/**
+	 * <p>traverseInOrder method</p>
+	 * <p>Description: traverses the tree and displays the data in order</p>
+	 */
 	private void traverseInOrder(AVLNode<E> node) {
 		if(node != null) {
 			traverseInOrder(node.getLeftChild());
@@ -97,8 +110,8 @@ public class AVLTree<E extends Comparable<E>> implements Tree<E>{
 	}
 	
 	/**
-	 * getMax method
-	 * Description: Returns the maximum value in the tree by accessing the right-most child of the current node
+	 * <p>getMax method</p>
+	 * <p>Description: Returns the maximum value in the tree by accessing the right-most child of the current node</p>
 	 * @param the current node this method is focused on
 	 * @return the maximum node of the current node.
 	 */
@@ -110,9 +123,10 @@ public class AVLTree<E extends Comparable<E>> implements Tree<E>{
 			return node.getData(); // return the maximum data in the tree
 		}
 	}
+	
 	/**
-	 * getMin method
-	 * Description: Returns the maximum value in the tree by accessing the left-most child of the current node
+	 * <p>getMin method</p>
+	 * <p>Description: Returns the maximum value in the tree by accessing the left-most child of the current node</p>
 	 * @param the current node this method is focused on
 	 * @return the minimum node of the current node.
 	 */
@@ -145,11 +159,11 @@ public class AVLTree<E extends Comparable<E>> implements Tree<E>{
 	}
 	
 	/**
-	 * remove helper method
-	 * 
-	 * @param data
-	 * @param node
-	 * @return
+	 * <p> remove helper method </p>
+	 * <p> Description: the recursive method that removes a node from the tree if the data matches the current node</p>
+	 * @param the data to be deleted
+	 * @param the current node in the recursion
+	 * @return the rotated tree after the removal
 	 */
 	private AVLNode<E> remove(E data, AVLNode<E> node){
 		if(node == null) {
@@ -175,54 +189,72 @@ public class AVLTree<E extends Comparable<E>> implements Tree<E>{
 		return applyRotation(node);
 	}
 	
+	/**
+	 * <p> updateHeight method </p>
+	 * <p> Description: the recursive method that updates the height of the nodes. This is usually used by the insertion
+	 * 	   and deletion methods.</p>
+	 * @param the current node in the recursion to have an updated height
+	 * @return the rotated tree after the removal
+	 */
 	private void updateHeight(AVLNode<E> node) {
-		int maxHeight = Math.max(height(node.getLeftChild()), height(node.getRightChild()));
-		node.setHeight(maxHeight + 1);
+		int maxHeight = Math.max(height(node.getLeftChild()), height(node.getRightChild())); // Retrieve the maximum path of the nodes
+		node.setHeight(maxHeight + 1); // Update the heights accordingly
 	}
 	
+	/**
+	 * <p> applyRotation method </p>
+	 * <p> Description: applies a rotation based on the balance factors of the nodes</p>
+	 * @param the node to apply the rotation to
+	 * @return the properly rotated node
+	 */
 	private AVLNode<E> applyRotation(AVLNode<E> node){
-		int balanceFactor = getBalanceFactor(node);
-		if(balanceFactor > 1) {
-			if(getBalanceFactor(node.getLeftChild()) < 0) {
-				node.setLeftChild(rotateLeft(node.getLeftChild()));
+		int balanceFactor = getBalanceFactor(node); // Get the balance factor of the current node
+		if(balanceFactor > 1) { // If the balance factor is more than 1
+			if(getBalanceFactor(node.getLeftChild()) < 0) { // If the balance factor of the left child is less than 0
+				node.setLeftChild(rotateLeft(node.getLeftChild())); // Rotate that child to the left first
 			}
-			return rotateRight(node);
+			return rotateRight(node); // Rotate the node to the right
 		}
-		else if(balanceFactor < -1) {
-			if(getBalanceFactor(node.getRightChild()) > 0) {
-				node.setRightChild(rotateRight(node.getRightChild()));
+		else if(balanceFactor < -1) { // If the balance factor is less than -1
+			if(getBalanceFactor(node.getRightChild()) > 0) { // If the balance factor of the right child is more than 0
+				node.setRightChild(rotateRight(node.getRightChild())); // rotate the right child to the right
 			}
-			return rotateLeft(node);
+			return rotateLeft(node); // Rotate the node to the left
 		}
 		
-		return node;
+		return node; // Return the updated node
 	}
 	
+	/**
+	 * <p> applyRotation method </p>
+	 * <p> Description: applies a rotation based on the balance factors of the nodes</p>
+	 * @param the node to apply the rotation to
+	 * @return the properly rotated node
+	 */
 	private AVLNode<E> rotateLeft(AVLNode<E> z){
-		AVLNode<E> y = z.getRightChild();
-		
-		AVLNode<E> t2 = y.getLeftChild();
-		
-		y.setLeftChild(z);
-		z.setRightChild(t2);
-		
-		updateHeight(z);
-		updateHeight(t2);
-		return y;
+	    AVLNode<E> y  = z.getRightChild();
+	    AVLNode<E> t2 = y.getLeftChild();
+
+	    y.setLeftChild(z);
+	    z.setRightChild(t2);
+
+	    updateHeight(z);
+	    updateHeight(y);
+	    return y;
 	}
-	
+
 	private AVLNode<E> rotateRight(AVLNode<E> z){
-		AVLNode<E> y = z.getLeftChild();
-		
-		AVLNode<E> t3 = y.getRightChild();
-		
-		y.setRightChild(z);
-		z.setLeftChild(t3);
-		updateHeight(z);
-		updateHeight(t3);
-		return y;
-		
+	    AVLNode<E> y  = z.getLeftChild();
+	    AVLNode<E> t3 = y.getRightChild();
+
+	    y.setRightChild(z);
+	    z.setLeftChild(t3);
+
+	    updateHeight(z);
+	    updateHeight(y);
+	    return y;
 	}
+
 	
 	private int getBalanceFactor(AVLNode<E> node) {
 		return node != null ? (height(node.getLeftChild()) - height(node.getRightChild())) : 0;
@@ -240,13 +272,16 @@ public class AVLTree<E extends Comparable<E>> implements Tree<E>{
 	 * @return
 	 */
 	private AVLNode<E> get(E data, AVLNode<E> node){
+		if(node == null) {
+			return null;
+		}
 		if(node.getData().compareTo(data) > 0) {
 			get(data, node.getRightChild());
 		}
 		else if(node.getData().compareTo(data) < 0) {
 			get(data, node.getRightChild());
 		}
-		return node != null ? node : null;
+		return node;
 	}
 	
 	
